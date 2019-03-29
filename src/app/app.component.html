@@ -1,0 +1,14 @@
+<!-- <div class="app-container">
+<app-option-details></app-option-details>
+<app-history></app-history>
+</div> -->
+
+<mat-toolbar>
+    <span class = "toolbar-spacer"><h1>{{title}}</h1></span>
+    <nav>
+        <a routerLink="/OptionDetails">Pricer</a>&nbsp;
+        <a routerLink="/history">History</a>&nbsp;
+       
+    </nav>
+</mat-toolbar>
+<router-outlet></router-outlet>
