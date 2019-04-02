@@ -47,7 +47,6 @@ export class OptionDetailsComponent implements OnInit {
     if (true) {
       this.profileForm.valueChanges.pipe(debounceTime(2000), distinctUntilChanged()).subscribe(() => this.getSolution());
     }
-
   }
 
   onSubmit() {
@@ -91,12 +90,19 @@ export class OptionDetailsComponent implements OnInit {
   getSolution(): void {
 
     this.PriceService.getSolution(this.profileForm.value)
-      .subscribe(PI => this.profileForm.patchValue(PI, { emitEvent: false }));
+      .subscribe(PI => this.profileForm.patchValue(PI, {emitEvent: false}));
     console.log(this.PI);
 
   }
 
-  public getTrade(id: number): void {
+  getTrade(id: number): void {
+
+    this.profileForm = this.fb.group({
+      Client: ['yughioaks'],
+      Total: [8],
+      trade: this.fb.array([this.addTradeGroup()])
+
+    });
     this.PriceService.getTrade(id)                                  
       .subscribe(                                                  
         traderequest => {
@@ -104,23 +110,19 @@ export class OptionDetailsComponent implements OnInit {
           for (let i = 1; i < this.Tradeinfo.trade.length; i++) {
             this.addTrade()
           }
-
-          this.profileForm.patchValue(this.Tradeinfo, { emitEvent: false });
+          console.log(this.Tradeinfo)
+          console.log(this.profileForm.value)
+          this.profileForm.patchValue(this.Tradeinfo, { emitEvent: true });
+          console.log(this.profileForm.value)
         }
       );
-
   }
+  
 
   getGreeks(): void {
     this.PriceService.getGreeks(this.PI)
       .subscribe(Greek => this.Greek = Greek)
   }
-
-  // getHistory(): void {
-  //   this.PriceService.getHistory()
-  //     .subscribe(Trade => this.Trade = Trade)
-  //   console.log("History nr 6" + this.Trade)
-  // }
 
   BookTrade(): void {
     this.PriceService.AddTrade(this.profileForm.value)

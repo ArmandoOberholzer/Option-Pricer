@@ -1,102 +1,57 @@
-<!-- <div class="form-container">
-  <mat-form-field>
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-        </mat-form-field>
-  <div class="app-box">
-     
- <table mat-table  [dataSource]="dataSource" multiTemplateDataRows matSort>
-    
-  <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
-    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
-  </div>
-</div> -->
 
 
 <div>
-    <div class="searchbar">
-        <div class="search-div">
-            <mat-form-field class="search-form-field" floatLabel="never">
-              <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
-            </mat-form-field>
-          </div>
+  <div class="searchbar">
+    <div class="search-div">
+      <mat-form-field class="search-form-field" floatLabel="never">
+        <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+      </mat-form-field>
     </div>
+  </div>
 
 
-<table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" matSort>
-<!--   <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header > {{column}} </th>
-    <td mat-cell *matCellDef ="let element;  let i = dataIndex;" >{{element[column]}} {{setDatasource(i) | async}}</td>
-  </ng-container>  -->
-<ng-container matColumnDef="Tradeid">
-  <th mat-header-cell *matHeaderCellDef mat-sort-header> Tradeid </th>
-  <td mat-cell *matCellDef="let element; let i = dataIndex;">{{element.Tradeid}}{{setDatasource(i) | async}} </td>
-</ng-container>
-<ng-container matColumnDef="Client">
-  <th mat-header-cell *matHeaderCellDef mat-sort-header> Client </th>
-  <td mat-cell *matCellDef="let element">{{element.Client}}</td>
-</ng-container>
-<ng-container matColumnDef="action">
-  <mat-header-cell *matHeaderCellDef></mat-header-cell>
-  <mat-cell *matCellDef="let row">
-    <button mat-icon-button  [routerLink]="['/OptionDetails']" (click)="getTrade(1)">
-      <mat-icon>launch</mat-icon>
-    </button>
-  </mat-cell>
-</ng-container>
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" matSort>
+    <ng-container matColumnDef="Tradeid">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Tradeid </th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex;">{{element.Tradeid}} </td>
+    </ng-container>
 
+    <ng-container matColumnDef="Client">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Client </th>
+      <td mat-cell *matCellDef="let element">{{element.Client}}</td>
+    </ng-container>
 
-<!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-<ng-container matColumnDef="expandedDetail">
-  <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-    <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button mat-icon-button [routerLink]="['/OptionDetails']" (click)="getTrade(element.Tradeid)">
+          <mat-icon>launch</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
 
-      <div class="example-element-description">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element ; setDatasource(element.Tradeid); " >
+    </tr>
+    
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr> 
+ 
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+        <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
 
-        <!-- <table mat-table [dataSource]="dataSource2" multiTemplateDataRows class="mat-elevation-z8">
+          <div class="example-element-description">
 
-          <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns2">
-  <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-  <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-</ng-container>
+            <app-trade-legs [displayHeading]="true" [Legs]='element.Tradeinfo[0]'></app-trade-legs>
+          </div>
+        </div>
+      </td>
 
-<tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-<tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
-</table> -->
-
-<app-trade-legs [displayHeading]="true" [teachers]="dataSource2"></app-trade-legs>
-
-
-</div>
-</div>
-</td>
-
-
-</ng-container>
-
-<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-<tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
-  [class.example-expanded-row]="expandedElement === element"
-  (click)="expandedElement = expandedElement === element ? null : element">
-</tr>
-<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-</table>
+    </ng-container>
+ </table>
 </div>
 
 
-
-<!-- <mat-table class="mat-elevation-z8" [dataSource]="dataSource2">
-                  <ng-container matColumnDef="Tradeid">
-                    <mat-header-cell *matHeaderCellDef> Spot </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.Tradeinfo.trade}} </mat-cell>
-                  </ng-container>
-
-              
-                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table> -->

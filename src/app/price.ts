@@ -51,8 +51,3 @@ export class TradeHist {
 }
 
 
-export class PeriodicElement {
-   Client: string;
-   Tradeid: number;
-
-}

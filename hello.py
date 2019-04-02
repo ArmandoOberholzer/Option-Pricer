@@ -167,13 +167,16 @@ def select_all_History():
 
 def Add_Trade():
   data = json.loads(request.data.decode())
+  print(data)
+  print(data['trade'])
+  print( '//////////////////////////////////////////////////////////////////////////' )
   database = "C:\sqlite\db\OptionHistory.db"
   conn = sqlite3.connect(database)
   with conn:
-      sql = ''' INSERT INTO history(Client, Tradeinfo)
-                            VALUES(?,?)''' 
+      sql = ''' INSERT INTO history(Client, Tradeinfo, Legs)
+                            VALUES(?,?,?)''' 
       cur = conn.cursor()
-      cur.execute(sql, (data['Client'],json.dumps(data)))
+      cur.execute(sql, (data['Client'],json.dumps(data),json.dumps(data['trade'])))
   return ("")
    
 
@@ -187,10 +190,11 @@ def getTrade():
   conn = sqlite3.connect(database)
   id = float(request.args.get('id'))
   with conn:
-    sql = 'SELECT Tradeinfo FROM history WHERE Tradeid=?'
+    sql = 'SELECT Legs FROM history WHERE Tradeid=?'
     cur = conn.cursor()
     cur.execute(sql, (id,))
     tradeinfo = cur.fetchall()
+    print(tradeinfo)
   return (tradeinfo[0][0])
     
 # #==========================================================================================
