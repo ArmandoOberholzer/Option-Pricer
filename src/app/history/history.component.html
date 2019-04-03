@@ -1,14 +1,11 @@
-
-
 <div>
   <div class="searchbar">
     <div class="search-div">
-      <mat-form-field class="search-form-field" floatLabel="never">
-        <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" autocomplete="off">
       </mat-form-field>
     </div>
   </div>
-
 
   <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="Tradeid">
@@ -33,11 +30,11 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
       [class.example-expanded-row]="expandedElement === element"
-      (click)="expandedElement = expandedElement === element ? null : element ; setDatasource(element.Tradeid); " >
+      (click)="expandedElement = expandedElement === element ? null : element ; setDatasource(element.Tradeid); ">
     </tr>
-    
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr> 
- 
+
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
     <ng-container matColumnDef="expandedDetail">
       <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
@@ -45,13 +42,11 @@
 
           <div class="example-element-description">
 
-            <app-trade-legs [displayHeading]="true" [Legs]='element.Tradeinfo[0]'></app-trade-legs>
+            <app-trade-legs [displayHeading]="true" [Legs]='element.TradeLegs'></app-trade-legs>
           </div>
         </div>
       </td>
 
     </ng-container>
- </table>
+  </table>
 </div>
-
-

@@ -17,14 +17,13 @@
               <mat-form-field>
                 <input matInput formControlName="Client" placeholder="Client Name" type="text">
               </mat-form-field>
-              
+
               <br />
               <br />
               <div class="row" formArrayName="trade">
                 <div *ngFor="let group of TradesArray.controls; let i = index;" [formGroupName]="i">
 
                   Leg {{i+1}}:
-
 
                   <mat-form-field>
                     <input matInput formControlName="type" placeholder="Call(c)/Put(p)" type="text">
@@ -61,10 +60,10 @@
                     <input matInput formControlName="price" placeholder="price" type="number">
                   </mat-form-field>
 
-
                   <button mat-icon-button (click)=" RemoveTrade(i)">
                     <mat-icon>delete</mat-icon>
                   </button>
+
                 </div>
 
               </div>
@@ -76,7 +75,6 @@
               <button mat-icon-button (click)=" addTrade()">
                 <mat-icon>add</mat-icon>
               </button>
-              <!-- <button mat-icon-button (click)=" addTrade()"><i><img src="https://img.icons8.com/color/38/000000/plus.png"></i></button> -->
             </form>
           </div>
 
@@ -85,9 +83,8 @@
           <div class="row">
             <button button mat-raised-button (click)="getSolution()" color="primary">Solve</button>&nbsp;
             <button button mat-raised-button (click)="getHistory() " color="primary">Hist </button>&nbsp;
-            <button button mat-raised-button (click)="add(clientName,'Add'); " color="primary">Add</button>&nbsp;
             <button button mat-raised-button (click)="BookTrade()" color="primary">Save </button>&nbsp;
-            <button button mat-raised-button (click)="getTrade(4)" color="primary">Test </button>
+            <button button mat-raised-button (click)="getTrade(3)" color="primary">Test </button>
 
           </div>
 

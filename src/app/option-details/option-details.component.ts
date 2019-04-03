@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PriceService } from '../price.service';
-import { PriceInputs, Greeks, History, TradeHist, GoalSeek,TradeSummary } from '../price';
+import { Legs, Greeks, TradeSummary } from '../price';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { range } from 'rxjs';
-
+import { debounceTime, distinctUntilChanged, count } from 'rxjs/operators';
+import { Profile } from 'selenium-webdriver/firefox';
 
 @Component({
   selector: 'app-option-details',
@@ -13,27 +12,22 @@ import { range } from 'rxjs';
 })
 export class OptionDetailsComponent implements OnInit {
 
-  PI: PriceInputs;
+  Legs: Legs;
   Greek: Greeks;
-  Hist: History[];
-  Trade: TradeHist[] = [];
+  Trade: TradeSummary[] = [];
   clientName: string;
-  GoalSeek: GoalSeek;
   Tradeinfo: TradeSummary;
   public profileForm: FormGroup;
   items: FormArray;
 
   constructor(private PriceService: PriceService, private fb: FormBuilder) {
-
-    this.PI = new PriceInputs();
-    this.GoalSeek = new GoalSeek();
+    this.Legs = new Legs();
     this.Tradeinfo = new TradeSummary();
-
   }
 
   ngOnInit() {
 
-      this.profileForm = this.fb.group({
+    this.profileForm = this.fb.group({
       Client: [null],
       Total: [null],
       trade: this.fb.array([this.addTradeGroup()])
@@ -44,9 +38,7 @@ export class OptionDetailsComponent implements OnInit {
   }
 
   onChanges(): void {
-    if (true) {
-      this.profileForm.valueChanges.pipe(debounceTime(2000), distinctUntilChanged()).subscribe(() => this.getSolution());
-    }
+    this.profileForm.valueChanges.pipe(debounceTime(2000), distinctUntilChanged()).subscribe(() => this.getSolution());
   }
 
   onSubmit() {
@@ -81,46 +73,30 @@ export class OptionDetailsComponent implements OnInit {
     return <FormArray>this.profileForm.get('trade');
   }
 
-
-  getPrice(): void {
-    this.PriceService.getPrice(this.PI)
-      .subscribe(PI => this.PI = PI);
-  }
-
   getSolution(): void {
-
-    this.PriceService.getSolution(this.profileForm.value)
-      .subscribe(PI => this.profileForm.patchValue(PI, {emitEvent: false}));
-    console.log(this.PI);
-
+        this.PriceService.getSolution(this.profileForm.value)
+        .subscribe(Legs => this.profileForm.patchValue(Legs, { emitEvent: false }));
+      console.log(this.Legs);   
   }
 
   getTrade(id: number): void {
 
-    this.profileForm = this.fb.group({
-      Client: ['yughioaks'],
-      Total: [8],
-      trade: this.fb.array([this.addTradeGroup()])
-
-    });
-    this.PriceService.getTrade(id)                                  
-      .subscribe(                                                  
+    this.PriceService.getTrade(id)
+      .subscribe(
         traderequest => {
-          this.Tradeinfo = traderequest              
-          for (let i = 1; i < this.Tradeinfo.trade.length; i++) {
+          for (let i = 1; i < traderequest.trade.length; i++) {
             this.addTrade()
           }
-          console.log(this.Tradeinfo)
+          console.log(traderequest)
           console.log(this.profileForm.value)
-          this.profileForm.patchValue(this.Tradeinfo, { emitEvent: true });
+          this.profileForm.patchValue(traderequest, { emitEvent: true });
           console.log(this.profileForm.value)
         }
       );
   }
-  
 
   getGreeks(): void {
-    this.PriceService.getGreeks(this.PI)
+    this.PriceService.getGreeks(this.Legs)
       .subscribe(Greek => this.Greek = Greek)
   }
 
@@ -130,19 +106,5 @@ export class OptionDetailsComponent implements OnInit {
         this.Trade.push(this.profileForm.value);
       });
   }
-
-  // add(name: string, action: string ): void {
-  //   name = name.trim();
-  //   if (!name) { return; }
-  //   let toets = { name , action } as ToetsHist
-  //   this.PriceService.AddToets(toets)
-  //     .subscribe(() => {
-  //       this.Toets.push(toets);
-  //     });
-  // }
-
-  // Update(): void {
-  //   this.PriceService.updateTrade(this.Toets);
-  // }
 
 }
