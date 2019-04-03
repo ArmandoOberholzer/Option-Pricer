@@ -154,6 +154,27 @@ def select_all_History():
   print("*********************************************************************************")
   print((hist))
   return json.dumps(hist)
+  
+@app.route("/GetGreeks", methods=['GET'])
+@cross_origin()
+
+def Get_All_Greeks():
+
+  database = "C:\sqlite\db\OptionHistory.db"
+  conn = sqlite3.connect(database)
+  with conn:
+      cur = conn.cursor()
+      cur.execute("SELECT Delta,Gamma,Theta,Vega,Rho from Greeks")
+      rows = cur.fetchall()
+      print(rows)
+
+      hist = []
+      for row in rows:
+         hist.append({'Delta': row[0],'Gamma': row[1], 'Theta':row[2],'Vega':row[3],'Rho':row[4]})
+  print("*********************************************************************************")
+  print((hist))
+  return json.dumps(hist)
+
  
   #==================================================================================
   #Add die Trade

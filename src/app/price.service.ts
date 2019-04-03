@@ -16,6 +16,7 @@ export class PriceService {
   private GoalSeekUrl = 'http://127.0.0.1:5000/GoalSeek';
   private GreekUrl = 'http://127.0.0.1:5000/Greeks';
   private DatabaseUrl = 'http://127.0.0.1:5000/Database';
+   private greeks_url='http://localhost:5000/GetGreeks';
  
 
   constructor(private http: HttpClient) { }
@@ -26,10 +27,8 @@ export class PriceService {
     return this.http.put<Legs>(requestUrl2, requestBody2);
   }
 
-  getGreeks(PI: Legs): Observable<Greeks> {
-    const requestUrl2 = this.GreekUrl;
-    const requestBody2 = JSON.stringify(PI);
-    return this.http.put<Greeks>(requestUrl2, requestBody2);
+  getGreeks(): Observable<Greeks> {
+    return this.http.get<Greeks>(this.greeks_url);
   }
 
   getHistory(): Observable<TradeSummary[]> {
